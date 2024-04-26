@@ -1,0 +1,6 @@
+[project]
+name = "nicegui-template"
+dependencies = [
+  "nicegui",
+  "fastapi-oauth2",
+]
