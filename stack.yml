@@ -1,0 +1,33 @@
+version: "3.5"
+
+volumes:
+  redis_data:
+
+networks:
+  nicegui_network:
+    external: true
+
+services:
+  redis:
+    image: 'redis/redis-stack:7.2.0-v10'
+    networks:
+      - nicegui_network
+    volumes:
+      - redis_data:/data
+      - ./services/redis.conf:/redis.conf
+
+  nicegui:
+    image: nicegui_template
+    networks:
+      - nicegui_network
+    # environment:
+    #   - REDIS_OM_URL=redis://@redis:6379
+    ports:
+      - target: 8080
+        published: 8080
+        mode: host
+    volumes: 
+      - .:/app/ # copy entire app into container
+    depends_on:
+      - redis
+  

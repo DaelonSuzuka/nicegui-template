@@ -1,0 +1,3 @@
+https://template.example.net {
+    reverse_proxy nicegui:8080
+}
