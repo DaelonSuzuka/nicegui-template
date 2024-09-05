@@ -20,14 +20,26 @@ services:
     image: nicegui_template
     networks:
       - nicegui_network
-    # environment:
-    #   - REDIS_OM_URL=redis://@redis:6379
+    environment:
+      - REDIS_OM_URL=redis://@redis:6379
     ports:
       - target: 8080
         published: 8080
         mode: host
     volumes: 
-      - .:/app/ # copy entire app into container
+      - ./src:/app/src # copy entire app into container
+    depends_on:
+      - redis
+  
+  worker:
+    image: nicegui_template
+    command: /app/.venv/bin/arq src.worker.WorkerSettings --watch /app/src
+    networks:
+      - nicegui_network
+    environment:
+      - REDIS_OM_URL=redis://@redis:6379
+    volumes: 
+      - ./src:/app/src # copy entire app into container
     depends_on:
       - redis
   

@@ -1,6 +1,9 @@
 [project]
 name = "nicegui-template"
+requires-python = ">= 3.12.4"
 dependencies = [
   "nicegui",
-  "fastapi-oauth2",
+  "arq",
+  "redis-om",
+  "pydantic-settings",
 ]
