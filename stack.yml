@@ -9,7 +9,7 @@ networks:
 
 services:
   redis:
-    image: 'redis/redis-stack:7.2.0-v10'
+    image: 'redis/redis-stack:7.4.0-v0'
     networks:
       - nicegui_network
     volumes:
@@ -33,7 +33,7 @@ services:
   
   worker:
     image: nicegui_template
-    command: /app/.venv/bin/arq src.worker.WorkerSettings --watch /app/src
+    command: arq src.worker.WorkerSettings --watch /app/src
     networks:
       - nicegui_network
     environment:

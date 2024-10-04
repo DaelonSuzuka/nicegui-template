@@ -8,6 +8,7 @@ WORKDIR /app
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 RUN uv venv
 ENV VIRTUAL_ENV=/app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
 
 # install dependencies
 COPY requirements.txt requirements.txt
@@ -17,4 +18,4 @@ COPY ./src /app/src
 
 EXPOSE 8080
 
-CMD ["/app/.venv/bin/python", "src/main.py"]
+CMD ["python", "src/main.py"]
