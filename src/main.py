@@ -1,6 +1,4 @@
-from nicegui import ui, app
-
-# import auth
+from nicegui import ui
 
 
 @ui.page('/')
