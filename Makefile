@@ -16,13 +16,6 @@ MAKEFLAGS += --no-builtin-rules
 run:
 	echo "run"
 
-compile:
-	uv pip compile pyproject.toml -o requirements.txt
-
-sync:
-	uv pip sync requirements.txt
-
-
 # **************************************************************************** #
 # docker commands
 
