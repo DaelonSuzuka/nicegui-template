@@ -61,9 +61,7 @@ class CommandPalette(ui.dialog):
         self.table.on('row_clicked', self.row_clicked)
 
     def on_change(self, e: ValueChangeEventArguments):
-        pass
         self.table.sort(e.value)
-        # self.text.run_method('select')
 
     def row_clicked(self, e: GenericEventArguments):
         value = e.args['value']
