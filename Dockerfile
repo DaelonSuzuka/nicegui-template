@@ -11,6 +11,7 @@ ENV VIRTUAL_ENV=/app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 # install dependencies
+COPY pyproject.toml pyproject.toml
 COPY uv.lock uv.lock
 RUN uv sync
 
