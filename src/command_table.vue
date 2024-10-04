@@ -10,11 +10,6 @@
 
 <script>
 export default {
-    setup() {
-        return {
-
-        }
-    },
     methods: {
         onRowClick(evt, row) {
             this.$emit('row_clicked', row);
