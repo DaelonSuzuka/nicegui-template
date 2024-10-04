@@ -11,8 +11,8 @@ ENV VIRTUAL_ENV=/app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 # install dependencies
-COPY requirements.txt requirements.txt
-RUN uv pip sync requirements.txt
+COPY uv.lock uv.lock
+RUN uv sync
 
 COPY ./src /app/src
 
