@@ -47,7 +47,7 @@ class CommandTable(ui.table, component='command_table.vue'):
 
 
 class CommandPalette(ui.dialog):
-    def __init__(self) -> None:
+    def __init__(self, options: list[str] | dict[str, str] = None) -> None:
         super().__init__(value=True)
 
         self.props('transition-duration=0')
@@ -59,6 +59,9 @@ class CommandPalette(ui.dialog):
         self.text.run_method('select')
         self.on('keydown', self.handle_key)
         self.table.on('row_clicked', self.row_clicked)
+
+        if options is not None:
+            self.add_items(options)
 
     def on_change(self, e: ValueChangeEventArguments):
         self.table.sort(e.value)

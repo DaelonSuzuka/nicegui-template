@@ -7,11 +7,8 @@ from command_palette import CommandPalette
 def index():
     async def handle_key(e: KeyEventArguments):
         if e.modifiers.shift and e.modifiers.ctrl and e.action.keydown and e.key == 'P':
-            cmd = CommandPalette()
-            cmd.add_item('one')
-            cmd.add_item('two')
-            result = await cmd
-            if result:
+            options = ['one', 'two']
+            if result := await CommandPalette(options):
                 ui.notify(result, position='bottom-right')
 
     ui.keyboard(on_key=handle_key)
