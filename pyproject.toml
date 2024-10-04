@@ -8,3 +8,6 @@ dependencies = [
   "redis-om",
   "pydantic-settings",
 ]
+
+[tool.ruff.format]
+quote-style = "single"
