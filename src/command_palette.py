@@ -6,7 +6,8 @@ from difflib import SequenceMatcher
 class CommandTable(ui.table, component='command_table.vue'):
     def __init__(self) -> None:
         columns = [
-            {'name': 'value', 'label': 'value', 'field': 'value', 'align': 'left'}
+            {'name': 'value', 'label': 'value', 'field': 'value', 'align': 'left'},
+            # {'name': 'ratio', 'label': 'ratio', 'field': 'ratio', 'align': 'right'},
         ]
         super().__init__(rows=[], columns=columns, row_key='id')
         self.items = []
@@ -26,22 +27,32 @@ class CommandTable(ui.table, component='command_table.vue'):
     def get_selection(self):
         return self.selected[0]['value']
 
-    def add_item(self, value):
-        row = {'value': value, 'id': len(self.items), 'ratio': 0}
+    def add_item(self, value: str, display: str = None):
+        row = {
+            'value': value,
+            'display': display if display else value,
+            'id': len(self.items),
+            'ratio': 1,
+        }
         self.items.append(row)
         self.add_row(row)
 
-    def sort(self, target):
-        for item in self.items:
-            result = SequenceMatcher(a=item['value'], b=target)
-            item['ratio'] = result.ratio()
+    def sort(self, target: str):
+        if target:
+            for item in self.items:
+                item['ratio'] = SequenceMatcher(a=item['value'], b=target).ratio()
+                if target not in item['value']:
+                    item['ratio'] = 0
+        else:
+            # if target is "", match everything
+            for item in self.items:
+                item['ratio'] = 1
 
         self.items.sort(key=lambda x: x['ratio'], reverse=True)
 
-        for i, item in enumerate(self.items):
-            item['id'] = i
+        items = filter(lambda x: x['ratio'] > 0, self.items)
 
-        self.update_rows(self.items, clear_selection=False)
+        self.update_rows(items, clear_selection=False)
         self.current_selection = 0
         self.set_selection()
 
@@ -70,8 +81,8 @@ class CommandPalette(ui.dialog):
         value = e.args['value']
         self.submit(value)
 
-    def add_item(self, value: str):
-        self.table.add_item(value)
+    def add_item(self, value: str, display: str = None):
+        self.table.add_item(value, display)
 
     def add_items(self, values: list[str] | dict[str, str]):
         if isinstance(values, list):
@@ -79,7 +90,7 @@ class CommandPalette(ui.dialog):
                 self.table.add_item(value)
         if isinstance(values, dict):
             for k, v in values.items():
-                self.table.add_item(v)
+                self.table.add_item(k, v)
 
     def handle_key(self, e: GenericEventArguments):
         if e.args['key'] == 'Enter':
