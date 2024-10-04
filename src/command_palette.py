@@ -52,8 +52,8 @@ class CommandPalette(ui.dialog):
 
         self.props('transition-duration=0')
 
-        with self, ui.card().classes('absolute top-10 w-1/2 px-2').tight():
-            self.text = ui.input(on_change=self.on_change).classes('w-full')
+        with self, ui.card().classes('absolute top-10 w-1/2').tight():
+            self.text = ui.input(on_change=self.on_change).classes('w-full px-2')
             self.table = CommandTable()
 
         self.text.run_method('select')
