@@ -1,23 +1,15 @@
 from nicegui import ui
 from nicegui.events import GenericEventArguments, ValueChangeEventArguments
+from difflib import SequenceMatcher
 
 
-class CommandTable(ui.table):
+class CommandTable(ui.table, component='command_table.vue'):
     def __init__(self) -> None:
         columns = [
-            {
-                'name': 'value',
-                'label': 'value',
-                'field': 'value',
-                'align': 'left',
-                'sortable': True,
-            }
+            {'name': 'value', 'label': 'value', 'field': 'value', 'align': 'left'}
         ]
         super().__init__(rows=[], columns=columns, row_key='id')
-        self.classes('w-full')
-        self.props('hide-header')
         self.items = []
-        self.on('@selection', self.row_clicked)
         self.current_selection = 0
 
     def select_up(self):
@@ -35,18 +27,23 @@ class CommandTable(ui.table):
         return self.selected[0]['value']
 
     def add_item(self, value):
-        row = {'value': value, 'id': len(self.items)}
+        row = {'value': value, 'id': len(self.items), 'ratio': 0}
         self.items.append(row)
         self.add_row(row)
 
-    def sort(self, new_value):
+    def sort(self, target):
+        for item in self.items:
+            result = SequenceMatcher(a=item['value'], b=target)
+            item['ratio'] = result.ratio()
+
+        self.items.sort(key=lambda x: x['ratio'], reverse=True)
+
+        for i, item in enumerate(self.items):
+            item['id'] = i
+
+        self.update_rows(self.items, clear_selection=False)
         self.current_selection = 0
         self.set_selection()
-        # sort list and update highlighting
-        pass
-
-    def row_clicked(self, e):
-        ui.notify(e)
 
 
 class CommandPalette(ui.dialog):
@@ -61,14 +58,19 @@ class CommandPalette(ui.dialog):
 
         self.text.run_method('select')
         self.on('keydown', self.handle_key)
+        self.table.on('row_clicked', self.row_clicked)
 
     def on_change(self, e: ValueChangeEventArguments):
+        pass
         self.table.sort(e.value)
+        # self.text.run_method('select')
+
+    def row_clicked(self, e: GenericEventArguments):
+        value = e.args['value']
+        self.submit(value)
 
     def add_item(self, value: str):
         self.table.add_item(value)
-
-        self.text.set_autocomplete(self.table.items)
 
     def add_items(self, values: list[str] | dict[str, str]):
         if isinstance(values, list):
@@ -77,8 +79,6 @@ class CommandPalette(ui.dialog):
         if isinstance(values, dict):
             for k, v in values.items():
                 self.table.add_item(v)
-
-        self.text.set_autocomplete(self.table.items)
 
     def handle_key(self, e: GenericEventArguments):
         if e.args['key'] == 'Enter':
@@ -90,4 +90,8 @@ class CommandPalette(ui.dialog):
 
     def __await__(self):
         self.table.set_selection()
+
+        items = list(map(lambda x: x['value'], self.table.items))
+        self.text.set_autocomplete(items)
+
         return super().__await__()

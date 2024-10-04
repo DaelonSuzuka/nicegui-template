@@ -12,12 +12,13 @@ def index():
             cmd.add_item('two')
             result = await cmd
             if result:
-                ui.notify(result)
+                ui.notify(result, position='bottom-right')
 
     ui.keyboard(on_key=handle_key)
 
 
 ui.run(
     title='NiceGUI Template',
+    uvicorn_reload_includes='*.vue',
     dark=True,
 )
