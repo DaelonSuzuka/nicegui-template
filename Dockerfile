@@ -5,7 +5,7 @@ FROM python:3.12
 WORKDIR /app
 
 # install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.6.2 /uv /bin/uv
 RUN uv venv
 ENV VIRTUAL_ENV=/app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
