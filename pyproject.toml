@@ -3,10 +3,10 @@ name = "nicegui-template"
 version = "0.1.0"
 requires-python = ">= 3.12.4"
 dependencies = [
-  "nicegui",
-  "arq",
-  "redis-om",
-  "pydantic-settings",
+    "arq>=0.26.3",
+    "nicegui>=2.11.1",
+    "pydantic-settings>=2.7.1",
+    "redis-om>=0.3.3",
 ]
 
 [tool.ruff.format]
