@@ -23,7 +23,7 @@ STACK_NAME := nicegui_template
 
 # build the application's docker image locally
 image:
-	docker build . -t $(STACK_NAME)
+	docker build . --network=host -t $(STACK_NAME)
 
 # create the application's network
 network:
