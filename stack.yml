@@ -9,7 +9,7 @@ networks:
 
 services:
   redis:
-    image: 'redis/redis-stack:7.4.0-v0'
+    image: 'docker.io/redis/redis-stack:7.4.0-v3'
     networks:
       - nicegui_network
     volumes:
